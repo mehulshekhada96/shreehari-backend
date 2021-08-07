@@ -15,24 +15,48 @@ const login =  async (req, res, next)=>{
 				req.session.userId = user.id;
 				req.session.user = user;
 				// console.log(req.session.user.name)
-				if(req.session.user.role === 'admin') res.send('welcome admin');
-				else res.send('login success');	
+				if(req.session.user.role === 'admin') res.json({user, message: 'welcome admin'});
+				else res.json({user, message: 'login success'});	
 			} else {
                 console.log("No correct things")
 				req.session.errorType = 'Failure';
 				req.session.error = "Incorrect Email or Password."
-				res.send('Incorrect Email or Password');	
+				res.json({message: 'Incorrect Email or Password'});	
              
 			}
 		} else {
 			req.session.errorType = 'Failure';
 			req.session.error = "Email Not Registered"
-			res.redirect('/login');
-            res.send("Email Not Registered")
+		
+            res.json({message: "Email Not Registered"})
 		}
 	}
 }
- 
+const signup2 =  async (req, res, next)=>{
+   
+        console.log(req.body.email, req.body.password);
+		const user = await User.findOne({ email: req.body.email });
+		const user1 = await User.findOne({ phoneNumber: req.body.phone });
+		if(user){
+           
+			res.json({message: "Email is already Registered, try with other"})
+			
+		}else if(user1){
+			res.json({message: "Phone Number is already Registered, try with other"})
+		} 
+		else {
+			const newUser = await User.create({
+				name: req.body.name,
+				phoneNumber: req.body.phone,
+				email: req.body.email,
+				password: req.body.password,
+			
+			  }).then(data=>{
+				console.log('signed up',data)  
+				res.status(200).json({message :"Signup success",data})})
+		}
+	
+}
 
 const signUp = async (req, res, next) => {
 	console.log(req.body)
@@ -42,13 +66,17 @@ const signUp = async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
 
-  });
-  req.session.userId = newUser.id;
-  req.session.user = newUser;
+  }).then(data=>{
+	console.log('signed up',data)  
+	res.status(200).json({message :"Signup success",data})})
+  .catch(error=>res.status(400).json({message: 'Email is registered', error}));
+//   req.session.userId = newUser.id;
+//   req.session.user = newUser;
 
-  req.session.errorType = "Success";
-  req.session.error = "Login Successful";
-  res.send("signup success");
+//   req.session.errorType = "Success";
+//   req.session.error = "Login Successful";
+//   res.send("signup success");
+//   next();
 };
 
 // Check if user is logged in if he is not then redirect to login page. 
@@ -80,5 +108,6 @@ module.exports = {
     login: login,
 	redirectLogin,
 	redirectLogin2,
-    clearError
+    clearError,
+	signup2
 }

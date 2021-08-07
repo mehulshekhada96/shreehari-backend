@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     },
     email: {
 		type: String,
-		unique: true,
+		unique: [true, 'This email is already registered'],
 		required: [true, 'Every user must have a email address']
 	},
     password: {
@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema({
     phoneNumber: {
 		type: Number,
 		required: [true, 'Every user must have a phone number'],
-		unique: true,
 		validate: {
 			validator: function(number){
 				return `${number}`.length === 10;

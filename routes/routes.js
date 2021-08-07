@@ -8,7 +8,7 @@ router.route('/').get((req,res)=>{
 })
 
 router.route('/signin').post(auth.login);
-router.route('/signup').post(auth.signUp);
+router.route('/signup').post(auth.signup2);
 router.route('/login').post((req, res)=>{
     console.log(req.body)
     res.send('working')

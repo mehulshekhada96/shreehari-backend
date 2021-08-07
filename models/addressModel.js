@@ -58,7 +58,7 @@ const addressSchema = new mongoose.Schema({
     phoneNumber: {
 		type: Number,
 		required: [true, 'Every user must have a phone number'],
-		unique: true,
+	
 		validate: {
 			validator: function(number){
 				return `${number}`.length === 10;

@@ -49,3 +49,4 @@ const productSchema = mongoose.Schema({
     tags: [String],
 })
 const Products = mongoose.model('Products', productSchema)
+module.exports = Products
