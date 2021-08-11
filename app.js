@@ -52,7 +52,27 @@ mongoose
     console.log("DB Connection Established");
   });
 
-  app.use('/',mainRoutes)
+  global.__basedir = __dirname;
+ console.log(__basedir)
+  // -> Multer Upload Storage
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      console.log(__basedir)
+      cb(null, __basedir + "/public/uploads/");
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
+    },
+  });
+  
+  const upload = multer({ storage: storage });
+  app.post('/demoUpload',upload.single("images"), (req,res)=>{
+    console.log(req.body);
+  
+    res.json({message: 'recived at 5000'})
+  })
+
+  // app.use('/',mainRoutes)
   app.listen(app.get("port"), () => {
     console.log("Application started Listening on ", app.get("port"));
   });

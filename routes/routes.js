@@ -13,5 +13,9 @@ router.route('/login').post((req, res)=>{
     console.log(req.body)
     res.send('working')
 })
-router.route('/uploadProduct').post(products.addProduct)
+router.route('/uploadProduct').post(products.addProduct);
+router.route('/demoUpload').post((req, res)=>{
+    console.log('file',req)
+    res.json({message: 'file recieved'})
+})
 module.exports = router;
